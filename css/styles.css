@@ -1,0 +1,111 @@
+body {
+  font-family: 'MedievalSharp', cursive;
+  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png'), #f4e4bc;
+  color: #2d1b08;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.parchment {
+  background: url('https://www.transparenttextures.com/patterns/old-wall.png'), #fff8e1;
+  border: 2px solid #8b4513;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+nav a:hover {
+  color: #b22222;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+th, td {
+  border: 1px solid #8b4513;
+  padding: 8px;
+  text-align: left;
+  max-width: 200px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th {
+  background: #8b4513;
+  color: white;
+}
+
+td:hover {
+  overflow: visible;
+  white-space: normal;
+  background: #fff8e1;
+  z-index: 10;
+  position: relative;
+}
+
+input, select, button {
+  border: 1px solid #8b4513;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+button {
+  background: #8b4513;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #b22222;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.tab-label {
+  background: #8b4513;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.tab-label:hover {
+  background: #b22222;
+}
+
+input[type="radio"]:checked + .tab-label {
+  background: #fff8e1;
+  color: #2d1b08;
+  border-bottom: 2px solid #8b4513;
+}
+
+@media (max-width: 640px) {
+  th, td, input, select, button {
+    font-size: 0.875rem;
+    padding: 4px;
+  }
+  .tab-label {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+  }
+}
