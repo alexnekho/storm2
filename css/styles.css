@@ -1,111 +1,87 @@
+/* Base typography */
 body {
   font-family: 'MedievalSharp', cursive;
-  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png'), #f4e4bc;
   color: #2d1b08;
   line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-.parchment {
-  background: url('https://www.transparenttextures.com/patterns/old-wall.png'), #fff8e1;
+/* Background textures */
+.parchment-bg {
+  background: url('https://www.transparenttextures.com/patterns/old-wall.png') center/cover, #fff8e1;
   border: 2px solid #8b4513;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+.paper-bg {
+  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat, #f4e4bc;
 }
 
-nav a:hover {
-  color: #b22222;
+/* Hero title */
+.hero-title {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 4rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+  letter-spacing: 0.1em;
 }
-
-.table-container {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-}
-
-th, td {
-  border: 1px solid #8b4513;
-  padding: 8px;
-  text-align: left;
-  max-width: 200px;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-th {
-  background: #8b4513;
-  color: white;
-}
-
-td:hover {
-  overflow: visible;
-  white-space: normal;
-  background: #fff8e1;
-  z-index: 10;
-  position: relative;
-}
-
-input, select, button {
-  border: 1px solid #8b4513;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-button {
-  background: #8b4513;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #b22222;
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-input[type="radio"] {
-  display: none;
-}
-
-.tab-label {
-  background: #8b4513;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px 4px 0 0;
-  cursor: pointer;
-  display: inline-block;
-}
-
-.tab-label:hover {
-  background: #b22222;
-}
-
-input[type="radio"]:checked + .tab-label {
-  background: #fff8e1;
-  color: #2d1b08;
-  border-bottom: 2px solid #8b4513;
-}
-
 @media (max-width: 640px) {
-  th, td, input, select, button {
-    font-size: 0.875rem;
-    padding: 4px;
+  .hero-title { font-size: 2rem; }
+}
+
+/* Tables */
+.table-container { overflow-x: auto; }
+table { width:100%; border-collapse: collapse; min-width:600px; }
+th, td { border:1px solid #8b4513; padding:0.5rem; text-align:left; overflow:hidden; text-overflow:ellipsis; }
+th { background:#8b4513; color:#fff; }
+td:hover { background:#fff8e1; overflow:visible; position:relative; z-index:10; }
+
+/* Forms & buttons */
+input, select, textarea, button {
+  border:1px solid #8b4513;
+  padding:0.5rem;
+  border-radius:0.375rem;
+  background-color:#fff;
+  transition:background-color 0.3s, color 0.3s;
+}
+button {
+  background:#8b4513;
+  color:#fff;
+  cursor:pointer;
+}
+button:hover {
+  background:#b22222;
+}
+
+/* Tabs */
+input[type="radio"] { display:none; }
+.tab-label {
+  background:#8b4513;
+  color:#fff;
+  padding:0.5rem 1rem;
+  border-radius:0.375rem 0.375rem 0 0;
+  cursor:pointer;
+  display:inline-block;
+  transition:background-color 0.3s, color 0.3s;
+}
+.tab-label:hover { background:#b22222; }
+.tab-content { display:none; padding:1rem; border:1px solid #8b4513; }
+input[type="radio"]:checked + .tab-label {
+  background:#fff8e1;
+  color:#2d1b08;
+  border-bottom:2px solid #8b4513;
+}
+input[type="radio"]:checked + .tab-label + .tab-content { display:block; }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  input, select, textarea, button {
+    padding:0.25rem;
+    font-size:0.875rem;
+  }
+  th, td {
+    padding:0.25rem;
+    font-size:0.875rem;
   }
   .tab-label {
-    padding: 6px 12px;
-    font-size: 0.875rem;
+    padding:0.375rem 0.75rem;
+    font-size:0.875rem;
   }
 }
