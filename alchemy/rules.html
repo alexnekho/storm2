@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Правила алхимии</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Алхимия</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="alchemy-index.html" class="hover:underline">Введение</a>
+        <a href="recipes.html" class="hover:underline">Рецепты</a>
+        <a href="reagents.html" class="hover:underline">Реагенты</a>
+        <a href="rules.html" class="hover:underline">Правила</a>
+        <a href="custom-potions.html" class="hover:underline">Собственные зелья</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Правила алхимии</h2>
+      <p class="text-lg mb-4">
+        Алхимия — это искусство создания зелий, взрывчатки и других предметов с помощью Инструментов алхимика. Ниже приведены основные правила, включая броски создания, характеристики и последствия неудач.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Инструменты и Характеристики</h3>
+      <p class="text-lg mb-4">
+        Алхимия использует Инструменты алхимика. Попытка создать зелье без них почти всегда совершается с помехой. Владение этими инструментами позволяет добавлять бонус мастерства ко всем алхимическим броскам создания.
+      </p>
+      <p class="text-lg">
+        Алхимия использует ваш модификатор Интеллекта или Мудрости (по вашему выбору). Модификатор Алхимии рассчитывается как: бонус мастерства от Инструментов алхимика + модификатор Интеллекта или Мудрости.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Бросок Создания</h3>
+      <p class="text-lg mb-4">
+        За каждые 2 часа создания совершите Бросок создания: 1d20 + ваш модификатор Интеллекта или Мудрости (на ваш выбор) + ваш бонус мастерства от Инструментов алхимика. Если среднее значение успешных проверок равно или превышает сложность зелья, вы преуспеваете. В противном случае вы теряете все материалы.
+      </p>
+      <p class="text-lg mb-4">
+        Вы можете прекратить создание после неудачного броска, но эта попытка засчитывается как неудачная.
+      </p>
+      <div class="bg-[#fff8e1] p-4 rounded border border-[#8b4513] mb-4">
+        <h4 class="text-xl font-bold text-[#8b4513] mb-2">Калькулятор бросков</h4>
+        <form id="crafting-form" class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label for="int-mod">Модификатор Интеллекта:</label>
+            <input type="number" id="int-mod" value="0" class="w-full sm:w-24">
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label for="wis-mod">Модификатор Мудрости:</label>
+            <input type="number" id="wis-mod" value="0" class="w-full sm:w-24">
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label for="proficiency">Бонус мастерства:</label>
+            <input type="number" id="proficiency" value="2" class="w-full sm:w-24">
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <label for="difficulty">Сложность зелья:</label>
+            <input type="number" id="difficulty" value="13" class="w-full sm:w-24">
+          </div>
+          <button type="submit">Бросить d20</button>
+        </form>
+        <p id="result" class="mt-4 text-lg"></p>
+      </div>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Успех и Неудача</h3>
+      <p class="text-lg">
+        Если среднее значение ваших бросков создания равно или превышает сложность зелья, вы получаете завершённое зелье. В случае неудачи вы теряете все затраченные материалы, а результат нельзя использовать.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Срок Годности и Просроченные Зелья</h3>
+      <p class="text-lg mb-4">
+        Алхимические зелья имеют срок годности 1 год, после чего становятся просроченными. Если зелье контактировало с реактивами, срок сокращается до 1 месяца.
+      </p>
+      <p class="text-lg mb-4">
+        При использовании просроченного зелья в пределах двойного срока годности бросьте d4:
+        <ul class="list-disc list-inside">
+          <li>1: Вы отравлены на 1 минуту.</li>
+          <li>2-3: Зелье действует с половинной эффективностью (длительность, урон или лечение уменьшены вдвое).</li>
+          <li>4: Зелье действует нормально.</li>
+        </ul>
+      </p>
+      <p class="text-lg">
+        Зелья, старше двойного срока годности, не действуют и вызывают отравление на 1 минуту.
+      </p>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+  <script>
+    document.querySelector("#crafting-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const intMod = parseInt(document.querySelector("#int-mod").value) || 0;
+      const wisMod = parseInt(document.querySelector("#wis-mod").value) || 0;
+      const proficiency = parseInt(document.querySelector("#proficiency").value) || 0;
+      const difficulty = parseInt(document.querySelector("#difficulty").value) || 13;
+      const modifier = Math.max(intMod, wisMod) + proficiency;
+      const roll = Math.floor(Math.random() * 20) + 1;
+      const total = roll + modifier;
+      const result = total >= difficulty
+        ? `Успех! Бросок: ${roll} + ${modifier} = ${total} (Сложность: ${difficulty})`
+        : `Неудача! Бросок: ${roll} + ${modifier} = ${total} (Сложность: ${difficulty})`;
+      document.querySelector("#result").textContent = result;
+    });
+  </script>
+</body>
+</html>

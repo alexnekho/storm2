@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Собственные зелья</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Алхимия</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="alchemy-index.html" class="hover:underline">Введение</a>
+        <a href="recipes.html" class="hover:underline">Рецепты</a>
+        <a href="reagents.html" class="hover:underline">Реагенты</a>
+        <a href="rules.html" class="hover:underline">Правила</a>
+        <a href="custom-potions.html" class="hover:underline">Собственные зелья</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Собственные зелья</h2>
+      <p class="text-lg mb-4">
+        Вы всегда можете создать что-нибудь более экзотическое, чем стандартные зелья. Собственные зелья позволяют комбинировать до 5 реагентов для достижения уникальных эффектов. Сложность зелья определяется суммой сложностей реагентов.
+      </p>
+      <p class="text-lg">
+        Используйте калькулятор ниже, чтобы рассчитать сложность и эффект вашего зелья. Учтите, что создание таких зелий требует тщательной подготовки и может быть рискованным!
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Сложность реагентов</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Реагент</th>
+              <th>Сложность</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Базовая сложность</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Обычный реагент</td>
+              <td>+1</td>
+            </tr>
+            <tr>
+              <td>Необычный реагент</td>
+              <td>+2</td>
+            </tr>
+            <tr>
+              <td>Редкий реагент</td>
+              <td>+3</td>
+            </tr>
+            <tr>
+              <td>Очень редкий реагент</td>
+              <td>+4</td>
+            </tr>
+            <tr>
+              <td>Легендарный реагент</td>
+              <td>+6</td>
+            </tr>
+            <tr>
+              <td>Обычная изначальная эссенция</td>
+              <td>+2</td>
+            </tr>
+            <tr>
+              <td>Необычная изначальная эссенция</td>
+              <td>+3</td>
+            </tr>
+            <tr>
+              <td>Редкая изначальная эссенция</td>
+              <td>+4</td>
+            </tr>
+            <tr>
+              <td>Очень редкая изначальная эссенция</td>
+              <td>+5</td>
+            </tr>
+            <tr>
+              <td>Легендарная изначальная эссенция</td>
+              <td>+7</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Калькулятор сложности зелья</h3>
+      <div class="bg-[#fff8e1] p-4 rounded border border-[#8b4513] mb-4">
+        <form id="potion-calculator" class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <label class="mb-2">Выберите до 5 реагентов:</label>
+            <ul id="reagent-list" class="border border-[#8b4513] rounded p-2 max-h-40 overflow-y-auto">
+              <li data-reagent="ordinary|1" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Обычный реагент (+1)</li>
+              <li data-reagent="uncommon|2" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Необычный реагент (+2)</li>
+              <li data-reagent="rare|3" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Редкий реагент (+3)</li>
+              <li data-reagent="very_rare|4" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Очень редкий реагент (+4)</li>
+              <li data-reagent="legendary|6" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Легендарный реагент (+6)</li>
+              <li data-reagent="ordinary_primal|2" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Обычная изначальная эссенция (+2)</li>
+              <li data-reagent="uncommon_primal|3" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Необычная изначальная эссенция (+3)</li>
+              <li data-reagent="rare_primal|4" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Редкая изначальная эссенция (+4)</li>
+              <li data-reagent="very_rare_primal|5" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Очень редкая изначальная эссенция (+5)</li>
+              <li data-reagent="legendary_primal|7" class="cursor-pointer hover:bg-[#8b4513] hover:text-white p-1 rounded">Легендарная изначальная эссенция (+7)</li>
+            </ul>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="mb-2">Выбранные реагенты (максимум 5):</label>
+            <ul id="selected-reagents" class="border border-[#8b4513] rounded p-2 min-h-[40px]"></ul>
+          </div>
+          <button type="submit" class="bg-[#8b4513] text-white p-2 rounded hover:bg-[#b22222] disabled:bg-gray-400" disabled>Рассчитать сложность</button>
+        </form>
+        <p id="difficulty-result" class="mt-4 text-lg"></p>
+        <div id="effects-result" class="mt-4 text-lg"></div>
+      </div>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Эффекты реагентов</h3>
+      <p class="text-lg mb-4">
+        Эффекты зависят от типов используемых реагентов. Изначальные эссенции усиливают эффекты. Вот основные эффекты:
+      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Тип реагента</th>
+              <th>Эффект</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Лечебный</td>
+              <td>Восстанавливает хиты (2d4 + 2 за каждый уровень редкости).</td>
+            </tr>
+            <tr>
+              <td>Реактивный</td>
+              <td>Наносит урон (1d6 за уровень редкости, тип урона на выбор: огонь, холод, молния, кислота).</td>
+            </tr>
+            <tr>
+              <td>Ядовитый</td>
+              <td>Наносит урон ядом (1d6 за уровень редкости) и может отравить (спасбросок СЛ 10 + уровень редкости).</td>
+            </tr>
+            <tr>
+              <td>Экзотический</td>
+              <td>Смотрите таблицу экзотических реагентов на странице <a href="reagents.html" class="text-[#b22222] underline">Реагенты</a>.</td>
+            </tr>
+            <tr>
+              <td>Изначальная эссенция</td>
+              <td>Удваивает эффект одного реагента того же уровня редкости или ниже.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+  <script>
+    const reagentEffects = {
+      ordinary: { difficulty: 1, effect: "Обычный эффект (например, 2d4 хитов или 1d6 урона).", label: "Обычный реагент (+1)" },
+      uncommon: { difficulty: 2, effect: "Необычный эффект (например, 4d4 хитов или 2d6 урона).", label: "Необычный реагент (+2)" },
+      rare: { difficulty: 3, effect: "Редкий эффект (например, 6d4 хитов или 3d6 урона).", label: "Редкий реагент (+3)" },
+      very_rare: { difficulty: 4, effect: "Очень редкий эффект (например, 8d4 хитов или 4d6 урона).", label: "Очень редкий реагент (+4)" },
+      legendary: { difficulty: 6, effect: "Легендарный эффект (например, 10d4 хитов или 5d6 урона).", label: "Легендарный реагент (+6)" },
+      ordinary_primal: { difficulty: 2, effect: "Удваивает эффект одного обычного реагента.", label: "Обычная изначальная эссенция (+2)" },
+      uncommon_primal: { difficulty: 3, effect: "Удваивает эффект одного необычного реагента.", label: "Необычная изначальная эссенция (+3)" },
+      rare_primal: { difficulty: 4, effect: "Удваивает эффект одного редкого реагента.", label: "Редкая изначальная эссенция (+4)" },
+      very_rare_primal: { difficulty: 5, effect: "Удваивает эффект одного очень редкого реагента.", label: "Очень редкая изначальная эссенция (+5)" },
+      legendary_primal: { difficulty: 7, effect: "Удваивает эффект одного легендарного реагента.", label: "Легендарная изначальная эссенция (+7)" }
+    };
+
+    const reagentList = document.querySelector("#reagent-list");
+    const selectedReagentsList = document.querySelector("#selected-reagents");
+    const calculateButton = document.querySelector("#potion-calculator button");
+    let selectedReagents = [];
+
+    reagentList.addEventListener("click", (e) => {
+      const li = e.target.closest("li");
+      if (!li) return;
+
+      const [reagent, difficulty] = li.dataset.reagent.split("|");
+      if (selectedReagents.some(r => r.reagent === reagent && r.difficulty === difficulty)) {
+        // Удаляем, если уже выбран
+        selectedReagents = selectedReagents.filter(r => !(r.reagent === reagent && r.difficulty === difficulty));
+        li.classList.remove("bg-[#8b4513]", "text-white");
+      } else if (selectedReagents.length < 5) {
+        // Добавляем, если меньше 5
+        selectedReagents.push({ reagent, difficulty: parseInt(difficulty), label: reagentEffects[reagent].label });
+        li.classList.add("bg-[#8b4513]", "text-white");
+      }
+
+      // Обновляем список выбранных
+      selectedReagentsList.innerHTML = selectedReagents
+        .map(r => `<li class="p-1">${r.label}</li>`)
+        .join("");
+
+      // Активируем/деактивируем кнопку
+      calculateButton.disabled = selectedReagents.length === 0;
+    });
+
+    document.querySelector("#potion-calculator").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (selectedReagents.length === 0) {
+        document.querySelector("#difficulty-result").textContent = "Ошибка: Выберите хотя бы один реагент.";
+        document.querySelector("#effects-result").innerHTML = "";
+        return;
+      }
+
+      let totalDifficulty = 10;
+      const effects = [];
+      selectedReagents.forEach(({ reagent, difficulty }) => {
+        totalDifficulty += difficulty;
+        effects.push(reagentEffects[reagent].effect);
+      });
+
+      document.querySelector("#difficulty-result").textContent = `Итоговая сложность зелья: ${totalDifficulty}`;
+      document.querySelector("#effects-result").innerHTML = `
+        <p>Потенциальные эффекты:</p>
+        <ul class="list-disc list-inside">
+          ${effects.map(effect => `<li>${effect}</li>`).join("")}
+        </ul>
+      `;
+    });
+  </script>
+</body>
+</html>

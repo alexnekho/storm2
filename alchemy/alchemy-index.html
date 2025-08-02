@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Введение в алхимию</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Алхимия</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="alchemy-index.html" class="hover:underline">Введение</a>
+        <a href="recipes.html" class="hover:underline">Рецепты</a>
+        <a href="reagents.html" class="hover:underline">Реагенты</a>
+        <a href="rules.html" class="hover:underline">Правила</a>
+        <a href="custom-potions.html" class="hover:underline">Собственные зелья</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Введение в алхимию</h2>
+      <p class="text-lg">
+        Алхимия — это ремесло, в результатах которого заинтересован определённый процент искателей приключений. Источник всегда востребованного Зелья лечения — универсального товара, поддерживающего (иногда в прямом смысле) жизнь искателей приключений.
+      </p>
+      <p class="text-lg">
+        Искателю приключений не нужно иметь много опыта в зельеварении, особенно если учитывать то, что они могут сварить зелье на медленном огне костра, разведённого для готовки... звучит конечно легко, но на самом деле не так просто при этом не отравиться.
+      </p>
+      <p class="text-lg">
+        Алхимия является достаточно быстрым способом создания предметов, но с этим приходят и дополнительные риски, скрытые в одном броске, провалы которых связаны с потерей всех материалов. Часто этот провал может стоить целого напряжённого приключения, поэтому можете рассмотреть опцию "Набрать 10", описанную в введении к ремеслу, когда скорость не имеет значения.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Быстрая справка</h2>
+      <ol class="list-decimal list-inside space-y-2 text-lg">
+        <li>Выберите зелье, которое вы решили сварить из таблицы "Таблица рецептов стандартных зелий".</li>
+        <li>Приобретите предметы, перечисленные в колонке "Материалы" для этого зелья.</li>
+        <li>Используя Инструменты алхимика, потратьте требуемое количество часов, указанное в колонке "Время создания" или, если время создания 2 часа или менее, то создание зелья можно совершить частью продолжительного отдыха. Алхимические предметы должны быть созданы за одну попытку создания.</li>
+        <li>За каждые 2 часа совершите Бросок создания 1d20 + ваш модификатор Интеллекта или Мудрости (на ваш выбор) + ваш бонус мастерства от Инструментов алхимика.</li>
+        <li>Вы можете прекратить создание после неудачного броска создания по вашему желанию, эта попытка будет засчитана как неудачная.</li>
+        <li>Если среднее значение успешных проверок равно или превышает значение, указанное в колонке "Сложность" для этого зелья, то вы преуспеваете в его создании. Если же значение успешных проверок меньше, то вы терпите неудачу и теряете все затраченные на это зелье материалы.</li>
+      </ol>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+</body>
+</html>

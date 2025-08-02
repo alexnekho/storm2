@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рецепты алхимии</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Алхимия</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="alchemy-index.html" class="hover:underline">Введение</a>
+        <a href="recipes.html" class="hover:underline">Рецепты</a>
+        <a href="reagents.html" class="hover:underline">Реагенты</a>
+        <a href="rules.html" class="hover:underline">Правила</a>
+        <a href="custom-potions.html" class="hover:underline">Собственные зелья</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Рецепты алхимии</h2>
+      <p class="text-lg mb-4">
+        Здесь собраны рецепты зелий, взрывчатки, масел и волшебных чернил, доступных алхимикам. Используйте фильтры, чтобы найти нужный предмет.
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <div>
+          <label for="rarity-filter" class="mr-2">Редкость:</label>
+          <select id="rarity-filter" class="border border-[#8b4513] rounded p-1">
+            <option value="all">Все</option>
+            <option value="Обычный">Обычный</option>
+            <option value="Необычный">Необычный</option>
+            <option value="Редкий">Редкий</option>
+            <option value="Очень Редкий">Очень Редкий</option>
+            <option value="Легендарный">Легендарный</option>
+          </select>
+        </div>
+        <div>
+          <label for="type-filter" class="mr-2">Тип:</label>
+          <select id="type-filter" class="border border-[#8b4513] rounded p-1">
+            <option value="all">Все</option>
+            <option value="Зелье">Зелье</option>
+            <option value="Взрывчатка">Взрывчатка</option>
+            <option value="Масло">Масло</option>
+            <option value="Чернила">Чернила</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table id="recipes-table">
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Материалы</th>
+              <th>Время</th>
+              <th>Проверки</th>
+              <th>Сложность</th>
+              <th>Редкость</th>
+              <th>Цена</th>
+              <th>Эффект</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+  <script>
+    const recipes = [
+      {
+        name: "Зелье Лечения",
+        materials: ["3 обычных лечебных реагента", "1 стеклянный фиал"],
+        time: "1 час",
+        checks: 1,
+        difficulty: 13,
+        rarity: "Обычный",
+        price: "50 зм",
+        type: "Зелье",
+        effect: "Восстанавливает 2d4 + 2 хитов."
+      },
+      {
+        name: "Зелье Большого Лечения",
+        materials: ["1 обычный лечебный реагент", "2 необычных лечебных реагента", "1 стеклянный фиал"],
+        time: "2 часа",
+        checks: 1,
+        difficulty: 16,
+        rarity: "Необычный",
+        price: "100 зм",
+        type: "Зелье",
+        effect: "Восстанавливает 4d4 + 4 хитов."
+      },
+      {
+        name: "Зелье Превосходного Лечения",
+        materials: ["2 необычных лечебных реагента", "1 редкий лечебный реагент", "1 стеклянный фиал"],
+        time: "4 часа",
+        checks: 2,
+        difficulty: 18,
+        rarity: "Редкий",
+        price: "250 зм",
+        type: "Зелье",
+        effect: "Восстанавливает 8d4 + 8 хитов."
+      },
+      {
+        name: "Зелье Высшего Лечения",
+        materials: ["1 редкий лечебный реагент", "1 очень редкий лечебный реагент", "1 хрустальный фиал"],
+        time: "8 часов",
+        checks: 4,
+        difficulty: 20,
+        rarity: "Очень Редкий",
+        price: "1000 зм",
+        type: "Зелье",
+        effect: "Восстанавливает 10d4 + 20 хитов."
+      },
+      {
+        name: "Зелье Невидимости",
+        materials: ["2 необычных реактивных реагента", "1 стеклянный фиал"],
+        time: "2 часа",
+        checks: 1,
+        difficulty: 16,
+        rarity: "Необычный",
+        price: "200 зм",
+        type: "Зелье",
+        effect: "Делает невидимым на 1 час или до атаки/заклинания."
+      },
+      {
+        name: "Зелье Сопротивления",
+        materials: ["1 необычный реактивный реагент", "1 редкий реактивный реагент", "1 стеклянный фиал"],
+        time: "4 часа",
+        checks: 2,
+        difficulty: 18,
+        rarity: "Редкий",
+        price: "300 зм",
+        type: "Зелье",
+        effect: "Сопротивление одному типу урона (выбор при создании) на 1 час."
+      },
+      {
+        name: "Зелье Скорости",
+        materials: ["1 редкий реактивный реагент", "1 очень редкий реактивный реагент", "1 стеклянный фиал"],
+        time: "8 часов",
+        checks: 4,
+        difficulty: 20,
+        rarity: "Очень Редкий",
+        price: "800 зм",
+        type: "Зелье",
+        effect: "Эффект заклинания 'Ускорение' на 1 минуту."
+      },
+      {
+        name: "Алхимический Огонь",
+        materials: ["2 обычных реактивных реагента", "1 стеклянная колба"],
+        time: "1 час",
+        checks: 1,
+        difficulty: 13,
+        rarity: "Обычный",
+        price: "50 зм",
+        type: "Взрывчатка",
+        effect: "Бросок: 1d4 огненного урона, 1 урона/раунд до тушения (Действие, СЛ 10 Ловкость)."
+      },
+      {
+        name: "Кислотный Фиал",
+        materials: ["1 обычный реактивный реагент", "1 необычный реактивный реагент", "1 стеклянная колба"],
+        time: "2 часа",
+        checks: 1,
+        difficulty: 16,
+        rarity: "Необычный",
+        price: "100 зм",
+        type: "Взрывчатка",
+        effect: "Бросок: 2d6 кислотного урона."
+      },
+      {
+        name: "Масло Скольжения",
+        materials: ["1 обычный реактивный реагент", "1 стеклянный фиал"],
+        time: "1 час",
+        checks: 1,
+        difficulty: 13,
+        rarity: "Обычный",
+        price: "50 зм",
+        type: "Масло",
+        effect: "Создаёт скользкую поверхность (10 футов, СЛ 10 Ловкость) на 1 минуту."
+      },
+      {
+        name: "Волшебные Чернила",
+        materials: ["1 редкий реактивный реагент", "1 хрустальный фиал"],
+        time: "4 часа",
+        checks: 2,
+        difficulty: 18,
+        rarity: "Редкий",
+        price: "200 зм",
+        type: "Чернила",
+        effect: "Используются для записи заклинаний 1-3 уровня в книгу заклинаний."
+      }
+    ];
+    function renderTable(rarityFilter = "all", typeFilter = "all") {
+      const tbody = document.querySelector("#recipes-table tbody");
+      tbody.innerHTML = "";
+      recipes
+        .filter(recipe => rarityFilter === "all" || recipe.rarity === rarityFilter)
+        .filter(recipe => typeFilter === "all" || recipe.type === typeFilter)
+        .forEach(recipe => {
+          const row = `
+            <tr>
+              <td>${recipe.name}</td>
+              <td>${recipe.materials.join(", ")}</td>
+              <td>${recipe.time}</td>
+              <td>${recipe.checks}</td>
+              <td>${recipe.difficulty}</td>
+              <td>${recipe.rarity}</td>
+              <td>${recipe.price}</td>
+              <td>${recipe.effect}</td>
+            </tr>`;
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+    }
+    renderTable();
+    document.querySelector("#rarity-filter").addEventListener("change", (e) => {
+      const typeFilter = document.querySelector("#type-filter").value;
+      renderTable(e.target.value, typeFilter);
+    });
+    document.querySelector("#type-filter").addEventListener("change", (e) => {
+      const rarityFilter = document.querySelector("#rarity-filter").value;
+      renderTable(rarityFilter, e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Реагенты алхимии</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Алхимия</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="alchemy-index.html" class="hover:underline">Введение</a>
+        <a href="recipes.html" class="hover:underline">Рецепты</a>
+        <a href="reagents.html" class="hover:underline">Реагенты</a>
+        <a href="rules.html" class="hover:underline">Правила</a>
+        <a href="custom-potions.html" class="hover:underline">Собственные зелья</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Реагенты алхимии</h2>
+      <p class="text-lg mb-4">
+        Материалы, используемые для алхимии, называются реагентами. Они делятся на категории: лечебные, реактивные, ядовитые и экзотические. Реагенты имеют разную редкость: обычный, необычный, редкий, очень редкий и легендарный.
+      </p>
+      <p class="text-lg mb-4">
+        Реагенты можно приобрести, собрать в дикой природе или добыть, разделывая магических монстров. Экзотические реагенты обладают уникальными эффектами и могут значительно усилить зелья.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Цены реагентов</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Реагент</th>
+              <th>Редкость</th>
+              <th>Цена</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Стеклянный Фиал</td>
+              <td>-</td>
+              <td>1 зм</td>
+            </tr>
+            <tr>
+              <td>Стеклянная Колба</td>
+              <td>-</td>
+              <td>1 зм</td>
+            </tr>
+            <tr>
+              <td>Хрустальный Фиал</td>
+              <td>-</td>
+              <td>10 зм</td>
+            </tr>
+            <tr>
+              <td>Обычный Реагент</td>
+              <td>Обычный</td>
+              <td>15 зм</td>
+            </tr>
+            <tr>
+              <td>Необычный Реагент</td>
+              <td>Необычный</td>
+              <td>40 зм</td>
+            </tr>
+            <tr>
+              <td>Редкий Реагент</td>
+              <td>Редкий</td>
+              <td>200 зм</td>
+            </tr>
+            <tr>
+              <td>Очень Редкий Реагент</td>
+              <td>Очень Редкий</td>
+              <td>2,000 зм</td>
+            </tr>
+            <tr>
+              <td>Легендарный Реагент</td>
+              <td>Легендарный</td>
+              <td>5,000 зм</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Сбор реагентов</h3>
+      <p class="text-lg mb-4">
+        Большинство реагентов можно найти в дикой природе. Во время медленного путешествия (8+ часов) совершите проверку собирательства с помехой. При целенаправленном сборе (8 часов) можно сделать две проверки без помехи. С Набором травника добавляется бонус мастерства.
+      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Бросок</th>
+              <th>Собранные ингредиенты</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1-5</td>
+              <td>1 обычный</td>
+            </tr>
+            <tr>
+              <td>6-10</td>
+              <td>2 обычных</td>
+            </tr>
+            <tr>
+              <td>11-15</td>
+              <td>1 обычный, 1 необычный</td>
+            </tr>
+            <tr>
+              <td>16-20</td>
+              <td>2 необычных</td>
+            </tr>
+            <tr>
+              <td>21-25</td>
+              <td>1 необычный, 1 редкий</td>
+            </tr>
+            <tr>
+              <td>26+</td>
+              <td>1 редкий, 1 очень редкий</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-lg mt-4">
+        Для каждого ингредиента бросьте d4: 1 — лечебный, 2 — реактив, 3 — ядовитый, 4 — экзотический.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Разделка монстров</h3>
+      <p class="text-lg mb-4">
+        Реагенты можно добыть из свежеубитых магических монстров (не позднее 8 часов). Совершите проверку Мудрости (Медицина) по сложности, зависящей от опасности монстра.
+      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Опасность</th>
+              <th>Сложность</th>
+              <th>Собранные ингредиенты</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1/2</td>
+              <td>15</td>
+              <td>1 обычный</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>16</td>
+              <td>1 обычный</td>
+            </tr>
+            <tr>
+              <td>2-4</td>
+              <td>17</td>
+              <td>2 обычных</td>
+            </tr>
+            <tr>
+              <td>5-8</td>
+              <td>18</td>
+              <td>1 необычный</td>
+            </tr>
+            <tr>
+              <td>9-12</td>
+              <td>20</td>
+              <td>1 редкий</td>
+            </tr>
+            <tr>
+              <td>13-16</td>
+              <td>22</td>
+              <td>2 редких</td>
+            </tr>
+            <tr>
+              <td>17-20</td>
+              <td>24</td>
+              <td>1 очень редкий</td>
+            </tr>
+            <tr>
+              <td>21+</td>
+              <td>30</td>
+              <td>1 легендарный</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-lg mt-4">
+        Если проверка превышает сложность на 5+, вы получаете Изначальную эссенцию той же редкости.
+      </p>
+    </section>
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h3 class="text-2xl font-bold text-[#8b4513] mb-4">Экзотические реагенты</h3>
+      <p class="text-lg mb-4">
+        Экзотические реагенты обладают уникальными эффектами. Используйте фильтр, чтобы выбрать реагенты по редкости.
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <div>
+          <label for="rarity-filter" class="mr-2">Редкость:</label>
+          <select id="rarity-filter" class="border border-[#8b4513] rounded p-1">
+            <option value="all">Все</option>
+            <option value="Обычный">Обычный</option>
+            <option value="Легендарный">Легендарный</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table id="exotic-reagents-table">
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Редкость</th>
+              <th>Сложность</th>
+              <th>Эффект</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+  <script>
+    const exoticReagents = [
+      {
+        name: "Яблоко Арбореи",
+        rarity: "Легендарный",
+        difficulty: "+6",
+        effect: "При употреблении имеет эффект заклинания 'Высшее восстановление'. Если существо с Добрым мировоззрением, также накладывает 'Защиту от смерти' до конца отдыха."
+      },
+      {
+        name: "Кошачий Папоротник",
+        rarity: "Обычный",
+        difficulty: "+1",
+        effect: "Дает тёмное зрение (30 футов) или увеличивает радиус тёмного зрения на 30 футов. В Зелье Лазания добавляет скорость лазания."
+      },
+      {
+        name: "Драконья Трава",
+        rarity: "Обычный",
+        difficulty: "+2",
+        effect: "В Зелье Огненного Дыхания заменяет дыхание на конус огня ('Огненные ладони'). В собственных зельях позволяет выдохнуть 15-футовый конус с уроном зелья."
+      },
+      {
+        name: "Глаз Василиска",
+        rarity: "Обычный",
+        difficulty: "+3",
+        effect: "В лечебное зелье с обычной святой эссенцией снимает состояние 'Окаменевший'."
+      },
+      {
+        name: "Сердце Горгульи",
+        rarity: "Обычный",
+        difficulty: "+3",
+        effect: "КД не ниже 16, иммунитет к критическим ударам на 1 час."
+      },
+      {
+        name: "Сердце Мимика",
+        rarity: "Обычный",
+        difficulty: "+2",
+        effect: "В Зелье Лазания даёт эффект 'Смена облика' (1 час). В Зелье Увеличения с редким реагентом — 'Превращение' (10 минут)."
+      }
+    ];
+    function renderExoticTable(rarityFilter = "all") {
+      const tbody = document.querySelector("#exotic-reagents-table tbody");
+      tbody.innerHTML = "";
+      exoticReagents
+        .filter(reagent => rarityFilter === "all" || reagent.rarity === rarityFilter)
+        .forEach(reagent => {
+          const row = `
+            <tr>
+              <td>${reagent.name}</td>
+              <td>${reagent.rarity}</td>
+              <td>${reagent.difficulty}</td>
+              <td>${reagent.effect}</td>
+            </tr>`;
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+    }
+    renderExoticTable();
+    document.querySelector("#rarity-filter").addEventListener("change", (e) => {
+      renderExoticTable(e.target.value);
+    });
+  </script>
+</body>
+</html>
