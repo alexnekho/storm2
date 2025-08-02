@@ -1,0 +1,168 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Черты</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-[#8b4513] text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Обучение</h1>
+      <div class="space-x-4">
+        <a href="../index.html" class="hover:underline">Главная</a>
+        <a href="training-index.html" class="hover:underline">Введение</a>
+        <a href="skills-tools.html" class="hover:underline">Навыки и инструменты</a>
+        <a href="saving-throws.html" class="hover:underline">Спасброски</a>
+        <a href="weapons.html" class="hover:underline">Оружие</a>
+        <a href="spellcasting.html" class="hover:underline">Заклинательства</a>
+        <a href="armor.html" class="hover:underline">Броня</a>
+        <a href="feats.html" class="hover:underline">Черты</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container mx-auto p-6 flex-grow">
+    <section class="parchment rounded-lg p-8 mb-8">
+      <h2 class="text-3xl font-bold text-[#8b4513] mb-4">Черты</h2>
+      <p class="text-lg mb-4">
+        Черты можно получить, достигнув определённых уровней бонусов в навыках, оружии, заклинательствах и других сферах. Количество ячеек памяти равно вашему бонусу мастерства. На 1-м уровне вы бесплатно получаете одну черту без повышения характеристик.
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <div>
+          <label for="type-filter" class="mr-2">Тип черты:</label>
+          <select id="type-filter" class="border border-[#8b4513] rounded p-1">
+            <option value="all">Все</option>
+            <option value="no-stats">Без повышения характеристик</option>
+            <option value="with-stats">С повышением характеристик</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table id="feats-table">
+          <thead>
+            <tr>
+              <th>Черта</th>
+              <th>Требования</th>
+              <th>Тип</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="bg-[#8b4513] text-white p-4 text-center">
+    <p>© 2025 Искры приключений</p>
+  </footer>
+  <script>
+    const feats = [
+      { name: "Адепт метамагии", requirements: "Ученик одной любой школы; Ученик магии", type: "no-stats" },
+      { name: "Адепт таинств", requirements: "Ученик одной любой школы; Ученик религии", type: "no-stats" },
+      { name: "Бдительный", requirements: "Адепт восприятия", type: "no-stats" },
+      { name: "Боевой заклинатель", requirements: "Ученик любой школы; Ученик телосложения", type: "no-stats" },
+      { name: "Борец", requirements: "Ученик атлетики; Ученик безоружной атаки", type: "no-stats" },
+      { name: "Верховой боец", requirements: "Адепт скакуна", type: "no-stats" },
+      { name: "Воодушевляющий лидер", requirements: "Адепт выступления или убеждения", type: "no-stats" },
+      { name: "Дикий атакующий", requirements: "Адепт одного любого рукопашного оружия", type: "no-stats" },
+      { name: "Использование двух оружий", requirements: "Ученик двух любых рукопашных оружий или Адепт одного любого рукопашного оружия", type: "no-stats" },
+      { name: "Крепкий", requirements: "Адепт телосложения", type: "no-stats" },
+      { name: "Мастер большого оружия", requirements: "Адепт одного любого рукопашного тяжёлого оружия", type: "no-stats" },
+      { name: "Мастер древкового оружия", requirements: "Адепт одного любого рукопашного оружия из списка", type: "no-stats" },
+      { name: "Мастер средних доспехов", requirements: "Адепт средних доспехов", type: "no-stats" },
+      { name: "Мастер щитов", requirements: "Адепт щитов", type: "no-stats" },
+      { name: "Меткие заклинания", requirements: "Ученик двух любых школ", type: "no-stats" },
+      { name: "Меткий стрелок", requirements: "Адепт одного любого дальнобойного оружия", type: "no-stats" },
+      { name: "Налётчик", requirements: "Ученик одного любого рукопашного оружия; Ученик атлетики", type: "no-stats" },
+      { name: "Одарённый", requirements: "Ученик комбинации из двух навыков или инструментов", type: "no-stats" },
+      { name: "Отравитель", requirements: "Ученик инструментов отравителя; Ученик ловкости рук", type: "no-stats" },
+      { name: "Подвижный", requirements: "Адепт акробатики", type: "no-stats" },
+      { name: "Посвящённый в боевое искусство", requirements: "Адепт атлетики или акробатики", type: "no-stats" },
+      { name: "Посвящённый в изобретательство", requirements: "Ученик одних любых инструментов ремесленника; Ученик магии", type: "no-stats" },
+      { name: "Посвящённый в магию", requirements: "Адепт магии, религии, природы", type: "no-stats" },
+      { name: "Проныра", requirements: "Адепт скрытности", type: "no-stats" },
+      { name: "Ритуальный заклинатель", requirements: "Ученик магии; Ученик религии или природы", type: "no-stats" },
+      { name: "Стихийный адепт", requirements: "Ученик воплощения или преобразования; +1 ранг за каждое следующее взятие", type: "no-stats" },
+      { name: "Страж", requirements: "Ученик одного любого рукопашного оружия; Ученик проницательности или расследования", type: "no-stats" },
+      { name: "Убийца магов", requirements: "Ученик магии, религии или природы; Ученик одного любого рукопашного оружия", type: "no-stats" },
+      { name: "Эксперт в арбалетах", requirements: "Адепт арбалета", type: "no-stats" },
+      { name: "Артистичный", requirements: "Адепт выступления; Эксперт обмана", type: "with-stats" },
+      { name: "Атлетичный", requirements: "Адепт силы; Эксперт атлетики", type: "with-stats" },
+      { name: "Внимательный", requirements: "Эксперт восприятия; Адепт расследования или проницательности", type: "with-stats" },
+      { name: "Драчун", requirements: "Эксперт безоружной атаки; Адепт атлетики", type: "with-stats" },
+      { name: "Крушитель", requirements: "Эксперт одного любого дробящего оружия; Адепт атлетики", type: "with-stats" },
+      { name: "Мастер тяжёлых доспехов", requirements: "Эксперт тяжёлых доспехов; Адепт телосложения", type: "with-stats" },
+      { name: "Отличная память", requirements: "Эксперт истории; Адепт восприятия", type: "with-stats" },
+      { name: "Пронзатель", requirements: "Эксперт одного любого колющего оружия; Адепт акробатики или атлетики", type: "with-stats" },
+      { name: "Рубака", requirements: "Эксперт одного любого рубящего оружия; Адепт атлетики", type: "with-stats" },
+      { name: "Стойкий", requirements: "Эксперт телосложения", type: "with-stats" },
+      { name: "Телекинетик", requirements: "Эксперт вызова или преобразования", type: "with-stats" },
+      { name: "Телепат", requirements: "Эксперт прорицания", type: "with-stats" },
+      { name: "Устойчивый", requirements: "Мастер навыка с характеристикой, спасбросок которой хотите получить", type: "with-stats" },
+      { name: "Шеф-повар", requirements: "Эксперт инструментов повара; Адепт выживания или природы", type: "with-stats" },
+      { name: "Эксперт в навыке", requirements: "Эксперт в двух любых навыках", type: "with-stats" },
+      { name: "Языковед", requirements: "Эксперт расследования; Адепт убеждения или истории", type: "with-stats" }
+    ];
+    function renderTable(typeFilter = "all") {
+      const tbody = document.querySelector("#feats-table tbody");
+      tbody.innerHTML = "";
+      feats
+        .filter(feat => typeFilter === "all" || feat.type === typeFilter)
+        .forEach(feat => {
+          const row = `
+            <tr>
+              <td>${feat.name}</td>
+              <td>${feat.requirements}</td>
+              <td>${feat.type === "no-stats" ? "Без повышения характеристик" : "С повышением характеристик"}</td>
+            </tr>`;
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+    }
+    renderTable();
+    document.querySelector("#type-filter").addEventListener("change", (e) => {
+      renderTable(e.target.value);
+    });
+  </script>
+</body>
+</html>
