@@ -1,0 +1,292 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Правила рассудка для D&D">
+  <meta name="keywords" content="опциональные правила, рассудок, D&D, Либре">
+  <title>Правила рассудка</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="optional-index.html">Опциональные правила</a>
+  </nav>
+  <div class="subnav">
+    <a href="dmg-rules.html">Правила из DMG</a>
+    <a href="homebrew-rules.html">Homebrew правила</a>
+    <a href="traumas.html">Правила травм</a>
+    <a href="sanity.html">Правила рассудка</a>
+    <a href="critical-hits.html">Критические успехи и провалы</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Правила рассудка</h1>
+      <p class="text-lg mb-4">
+        Расширение опционального правила Здравомыслие из DMG стр. 264-266, связывающее его с новой системой травм. Базовое значение Рассудка персонажа равно 10 и не может опуститься ниже 1 или подняться выше 20.
+      </p>
+      <h2>Понижение</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Событие</th>
+            <th>Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Получение травмы</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Получение степени истощения</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Совершение продолжительного отдыха с Рассудком > 10</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Повышение</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Событие</th>
+            <th>Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Получение вдохновения</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Успех спасброска Рассудка</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Совершение продолжительного отдыха с Рассудком < 10</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Психоз и воодушевление</h2>
+      <p class="text-lg mb-4">
+        Когда значение Рассудка персонажа понижается до 7, 4 или 1, он получает психоз. Если значение Рассудка персонажа при повышении достигает значений 13, 16 или 19, он получает воодушевление. Данные эффекты срабатывают не чаще одного раза в продолжительный отдых для каждого из значений. Персонаж не может одновременно иметь психоз и воодушевление, поэтому при получении они отменяют действие друг друга.
+      </p>
+      <p class="text-lg mb-4">
+        Психозы записываются в таблицу травм, а воодушевления отдельно от неё. Когда персонаж получает травму или психоз и ему некуда его записать, но он имеет воодушевление, то действие воодушевления оканчивается, а полученная травма или психоз отменяется. Когда персонаж оканчивает продолжительный отдых, действие всех психозов и воодушевлений на нём оканчивается. Заклинание <em>Умиротворение</em> [Calm emotions] подавляет действие психозов и воодушевлений на персонаже на время действия. Заклинание <em>Высшее восстановление</em> [Greater restoration] оканчивает действие одного психоза на цели.
+      </p>
+      <h3>Психозы</h3>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к8</th>
+            <th>Эффект</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Недоверчивость. Вы не можете совершать действия Помощь и Отвлечение, а также получать любые преимущества от союзников.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Агрессивность. Вы находитесь под эффектом, аналогичным заклинанию <em>Изобилие врагов</em> [Enemies abound], но не можете совершать спасброски.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Трусость. Вы не можете совершать действия Запугать и Провокация, а также получаете штраф -1 к броскам атаки за каждого врага в пределах 30 футов, с максимумом -6.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Брезгливость. Вы не можете совершать действие Захват и рукопашные атаки.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Неуверенность. Вы не можете иметь преимущества на свои проверки навыков и броски атаки.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Видения. Вы находитесь под эффектом, аналогичным заклинанию <em>Воображаемая сила</em> [Phantasmal force], но не можете совершать проверки Интеллекта (Расследование). Вид иллюзии может меняться.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Истерия. Вы находитесь под эффектом, аналогичным заклинанию <em>Смятение</em> [Confusion], но не можете совершать спасброски.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Внушаемость. Вы совершаете с помехой спасброски от Очарования и Испуга, когда вы проваливаете такой спасбросок, значение вашего Рассудка уменьшается на 1, а также получаете уязвимость к урону психической энергией.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Воодушевления</h3>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к8</th>
+            <th>Эффект</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Сосредоточенность. Вы совершаете с преимуществом проверки характеристик и спасброски, связанные с Интеллектом, Мудростью и Харизмой.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Чувство единства. Вы можете совершать действия Помощь и Отвлечение бонусным действием, а также получаете бонус +1 к броскам атаки за каждого союзника в пределах 30 футов, с максимумом +6.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Энергичность. Вы можете совершать действия Отход и Рывок бонусным действием, а ваша скорость передвижения увеличивается на 10 футов.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Возвышенность. Вы не можете иметь помехи на свои проверки навыков и броски атаки.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Непоколебимость. Совершите бросок двух костей хитов и добавьте удвоенный модификатор Телосложения, ваш максимум хитов увеличивается на полученное значение.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Боевой азарт. Каждый раз, когда вы опускаете хиты существа до 0, вы получаете Вдохновение.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Спокойствие. С шансом 50% значение вашего Рассудка не будет уменьшаться.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Могущество. Когда вы держите в руках оружие, оно получает бонус +3 к попаданию и урону, а также считается магическим для преодоления сопротивлений и иммунитетов, если только не считается магическим оружием с аналогичными бонусами.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Время отдыха</h2>
+      <p class="text-lg mb-4">
+        Когда вы совершаете деятельность простоя, такую как: Восстановление, Исполнение священных ритуалов, Кутёж или Отдых, значение вашего Рассудка увеличивается на 2 за каждый потраченный день. Мастер может разрешить вам получать аналогичное преимущество и от другой деятельности простоя, если она соответствует любимому делу вашего персонажа.
+      </p>
+      <div class="nav-links">
+        <a href="traumas.html">← Назад: Правила травм</a>
+        <a href="critical-hits.html">Далее: Критические успехи и провалы →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

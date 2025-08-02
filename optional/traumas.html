@@ -1,0 +1,271 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Правила травм для D&D">
+  <meta name="keywords" content="опциональные правила, травмы, D&D, Либре">
+  <title>Правила травм</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="optional-index.html">Опциональные правила</a>
+  </nav>
+  <div class="subnav">
+    <a href="dmg-rules.html">Правила из DMG</a>
+    <a href="homebrew-rules.html">Homebrew правила</a>
+    <a href="traumas.html">Правила травм</a>
+    <a href="sanity.html">Правила рассудка</a>
+    <a href="critical-hits.html">Критические успехи и провалы</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Правила травм</h1>
+      <p class="text-lg mb-4">
+        Персонажи могут получать различные травмы, которые делятся на три степени тяжести: лёгкие, средние и тяжёлые. Одновременно персонаж может иметь не более 3-х лёгких, 2-х средних и 1-й тяжёлой травм. При получении травмы, она записывается в самую низкую степень, но если там не осталось места для записи, то она переходит в более тяжёлую и так далее до тех пор, пока всё место в таблице не закончится. Когда персонаж получает травму и ему некуда её записать, его хиты опускаются до 0 и он начинает кидать спасброски от смерти, при этом он не может быть стабилизирован или прийти в сознание до тех пор, пока не излечится хотя бы от одной из травм.
+      </p>
+      <h2>Таблица травм</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Лёгкие</th>
+            <th>Средние</th>
+            <th>Тяжёлые</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>-/-/-</td>
+            <td>-/-</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Получение и избавление</h2>
+      <p class="text-lg mb-4">
+        В таблице “Получение травм” указаны несколько способов получения травм. Персонаж не может получить более одной травмы из одного источника.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Способ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Получение критического удара</td>
+          </tr>
+          <tr>
+            <td>Получение массивного урона</td>
+          </tr>
+          <tr>
+            <td>Снижение хитов до 0</td>
+          </tr>
+          <tr>
+            <td>Провал спасброска от смерти на 5 или более</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-lg mb-4">
+        Персонаж может избавиться от травмы, восстановив требуемое количество хитов, указанное в таблице “Избавление от травм”. Требуемое количество хитов зависит от тяжести травмы и кости хитов персонажа, если у вас есть несколько разных костей хитов, то учитывается та, количество которых у вас наибольшее. При этом сначала излечивается последняя полученная травма самой высокой тяжести. Восстановление хитов сверх требуемого значения переносится на следующую травму.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Тяжесть</th>
+            <th>Восстановление хитов (к6/к8/к10/к12)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Лёгкая</td>
+            <td>24/28/32/36</td>
+          </tr>
+          <tr>
+            <td>Средняя</td>
+            <td>42/48/54/60</td>
+          </tr>
+          <tr>
+            <td>Тяжёлая</td>
+            <td>64/72/80/88</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Превозмогание</h2>
+      <p class="text-lg mb-4">
+        В начале своего хода, игрок может решить потратить 1 Очко героизма, чтобы игнорировать все штрафы от травм и психозов (кроме потери конечностей), в течение 10 минут.
+      </p>
+      <h2>Виды травм</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к10</th>
+            <th>Травма</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Кровоточащая рана. Совершите бросок двух костей хитов и добавьте удвоенный модификатор Телосложения, ваш максимум хитов уменьшается на полученное значение.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Подбитый глаз. Вы совершаете с помехой проверки Мудрости (Восприятие), а также броски дальнобойных атак.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Вывих плеча. Вы совершаете с помехой проверки Силы (Атлетика) и спасброски Силы, а также броски рукопашных атак.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Переломанные пальцы. Вы совершаете с помехой проверки Ловкости (Ловкость рук), а заклинания с соматическим компонентом имеют 50% шанс на провал.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Повреждённые сухожилия. Вы совершаете с помехой проверки Ловкости (Акробатика) и спасброски Ловкости, а ваша скорость передвижения снижается вдвое.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Сломанные рёбра. В свой ход вы можете совершать только действие, бонусное действие или передвижение, лишь что-то одно.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Сотрясение. Вы совершаете с помехой проверки характеристик и спасброски, связанные с Интеллектом, Мудростью и Харизмой, а заклинания с вербальным компонентом имеют 50% шанс на провал.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Заражение. Значение вашей Силы, Ловкости или Телосложения уменьшается на 1к4 при получении травмы и за каждые 24 часа.</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Внутрянняя травма. Вы совершаете с помехой спасброски Телосложения и спасброски от смерти.</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Синяки и царапины. Нет штрафов.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="nav-links">
+        <a href="homebrew-rules.html">← Назад: Homebrew правила</a>
+        <a href="sanity.html">Далее: Правила рассудка →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

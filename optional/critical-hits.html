@@ -1,0 +1,251 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Правила критических успехов и провалов для D&D">
+  <meta name="keywords" content="опциональные правила, критические успехи, критические провалы, D&D, Либре">
+  <title>Критические успехи и провалы</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="optional-index.html">Опциональные правила</a>
+  </nav>
+  <div class="subnav">
+    <a href="dmg-rules.html">Правила из DMG</a>
+    <a href="homebrew-rules.html">Homebrew правила</a>
+    <a href="traumas.html">Правила травм</a>
+    <a href="sanity.html">Правила рассудка</a>
+    <a href="critical-hits.html">Критические успехи и провалы</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Критические успехи и провалы</h1>
+      <p class="text-lg mb-4">
+        Когда ваш персонаж или другое существо совершает критическое попадание атакой или критический провал атаки, совершите бросок по одной из соответствующих таблиц.
+      </p>
+      <h2>Критическое попадание</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к10</th>
+            <th>Результат</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Вы повреждаете доспех цели и он получает накопительный штраф -1 к КД. Доспех уничтожается, если штраф уменьшает его КД до 10.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Свой следующий бросок атаки, проверку характеристики или спасбросок цель совершает с помехой, если он будет совершён до начала вашего следующего хода.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Цель роняет один удерживаемый предмет и он отлетает на 10 футов в случайном направлении.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Следующий бросок атаки по цели будет иметь преимущество, если будет совершён до начала вашего следующего хода.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Вы получаете Вдохновение.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Вы наносите дополнительную кость урона.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Вы можете совершить дополнительную атаку бонусным действием.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Вы можете совершить действие Запугать или Провокация частью атаки.</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Цель падает ничком или отталкивается на 10 футов.</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Цель не может восстанавливать хиты до начала вашего следующего хода.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Критический провал попадания</h2>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к10</th>
+            <th>Результат</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Вы повреждаете своё оружие и оно получает накопительный штраф -1 к броскам урона. Если этот штраф дойдет до -5, оружие будет уничтожено.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Свой следующий бросок атаки, проверку характеристики или спасбросок вы совершаете с помехой, если он будет совершён до конца вашего следующего хода.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Вы роняете один удерживаемый предмет и он отлетает на 10 футов в случайном направлении.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Следующий бросок атаки по вам будет иметь преимущество, если будет совершён до начала вашего следующего хода.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Ваше значение Рассудка уменьшается на 1.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Ваша атака поражает союзника в пределах 5 футов от цели, если это возможно. Совершите повторный бросок атаки против новой цели.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Одно существо может реакцией совершить по вам атаку, если вы находитесь в пределах его досягаемости.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Ваше оружие застревает в поверхности, вы должны потратить действие, чтобы освободить его. Если вы накладывали заклинание, то вы не можете накладывать никаких заклинаний, кроме заговоров до конца своего следующего хода.</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Вы падаете ничком или перемещаетесь на 10 футов в случайном направлении.</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Вы получаете штраф -2 к КД до конца вашего следующего хода.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="nav-links">
+        <a href="sanity.html">← Назад: Правила рассудка</a>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Опциональные правила для D&D: обзор раздела">
+  <meta name="keywords" content="опциональные правила, D&D, Либре">
+  <title>Опциональные правила - Руководство к Либре</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 2rem;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    .highlight {
+      background-color: #fff5e1;
+      border-left: 4px solid #b22222;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+  </nav>
+  <div class="subnav">
+    <a href="dmg-rules.html">Правила из DMG</a>
+    <a href="homebrew-rules.html">Homebrew правила</a>
+    <a href="traumas.html">Правила травм</a>
+    <a href="sanity.html">Правила рассудка</a>
+    <a href="critical-hits.html">Критические успехи и провалы</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Опциональные правила</h1>
+      <p class="text-lg mb-4">
+        Этот раздел содержит опциональные правила для игры в D&D, включая официальные правила из DMG и PHB, а также домашние правила (Homebrew), такие как система травм, рассудка, критических успехов и провалов, а также новые боевые приёмы.
+      </p>
+      <h2>Подразделы</h2>
+      <ul class="list-disc list-inside text-lg">
+        <li><a href="dmg-rules.html">Правила из DMG</a></li>
+        <li><a href="homebrew-rules.html">Homebrew правила</a></li>
+        <li><a href="traumas.html">Правила травм</a></li>
+        <li><a href="sanity.html">Правила рассудка</a></li>
+        <li><a href="critical-hits.html">Критические успехи и провалы</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
