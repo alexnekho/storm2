@@ -1,0 +1,179 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Галерея ностальгии: картины из мира Либре">
+  <meta name="keywords" content="галерея, ностальгия, Либре, картины, D&D">
+  <title>Галерея ностальгии</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8; /* Пергаментный фон */
+      margin: 0;
+      padding: 20px;
+      font-family: 'MedievalSharp', cursive;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .gallery-item {
+      text-align: center;
+    }
+    .gallery-image {
+      max-width: 100%;
+      height: auto;
+      border: 8px solid #8b4513;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s;
+    }
+    .gallery-image:hover {
+      transform: scale(1.05);
+    }
+    .gallery-caption {
+      font-size: 1.2rem;
+      color: #8b4513;
+      margin-top: 10px;
+    }
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+    }
+    @media (max-width: 480px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+    <div class="gallery-item">
+      <img src="images/fish.jpg" alt="Деревня рыболюдей" class="gallery-image">
+      <div class="gallery-caption">Деревня рыболюдей</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/faragon.jpg" alt="Замок Фарагона" class="gallery-image">
+      <div class="gallery-caption">Замок Фарагона</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/dragon.jpg" alt="Дракон и Демон" class="gallery-image">
+      <div class="gallery-caption">Дракон и Демон</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/elf.jpg" alt="Эльфийский герой" class="gallery-image">
+      <div class="gallery-caption">Эльфийский герой</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/obelisk.jpg" alt="Обелиск" class="gallery-image">
+      <div class="gallery-caption">Обелиск</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/astalor.jpg" alt="Сражение с Асталором" class="gallery-image">
+      <div class="gallery-caption">Сражение с Асталором</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/boom.jpg" alt="Великий взрыв" class="gallery-image">
+      <div class="gallery-caption">Великий взрыв</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/miln.jpg" alt="Деревня в Мильне" class="gallery-image">
+      <div class="gallery-caption">Деревня в Мильне</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/3.jpg" alt="Троеединие" class="gallery-image">
+      <div class="gallery-caption">Троеединие</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/cave.jpg" alt="Печальная правда" class="gallery-image">
+      <div class="gallery-caption">Печальная правда</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/obelisk2.jpg" alt="Дайте войти" class="gallery-image">
+      <div class="gallery-caption">Дайте войти</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/dem.jpg" alt="Перебафаная херня, бежим нафиг" class="gallery-image">
+      <div class="gallery-caption">Перебафаная херня, бежим нафиг</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/wall.jpg" alt="Стена той самой деревни" class="gallery-image">
+      <div class="gallery-caption">Стена той самой деревни</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/skeleton.jpg" alt="Сколько скелетов ты хочешь добавить в бой? -да" class="gallery-image">
+      <div class="gallery-caption">Сколько скелетов ты хочешь добавить в бой? -да</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/ast.jpg" alt="Тюрьма Асталора" class="gallery-image">
+      <div class="gallery-caption">Тюрьма Асталора</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/what.jpg" alt="Что-то где-то" class="gallery-image">
+      <div class="gallery-caption">Что-то где-то</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/begin.jpg" alt="Начало" class="gallery-image">
+      <div class="gallery-caption">Начало</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/kra.jpg" alt="Кракен буль-буль" class="gallery-image">
+      <div class="gallery-caption">Кракен буль-буль</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/dun.jpg" alt="Слишком много комнат" class="gallery-image">
+      <div class="gallery-caption">Слишком много комнат</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/dad.jpg" alt="Батя..." class="gallery-image">
+      <div class="gallery-caption">Батя...</div>
+    </div>
+  </div>
+</body>
+</html>
