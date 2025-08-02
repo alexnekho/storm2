@@ -1,0 +1,378 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Изготовление магических и немагических предметов в D&D">
+  <meta name="keywords" content="ремесло, магические предметы, немагические предметы, свитки, D&D, Либре">
+  <title>Изготовление предметов - Ремесло</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2 {
+      color: #8b4513;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 2rem;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="crafting-index.html">Ремесло</a>
+    <a href="materials.html">Материалы</a>
+    <a href="formulas.html">Формулы</a>
+    <a href="prefixes.html">Префиксы</a>
+  </nav>
+  <div class="container">
+    <div class="parchment">
+      <h1>Изготовление предметов</h1>
+      <h2>Изготовление магических предметов</h2>
+      <p class="text-lg mb-4">
+        При создании магического предмета персонаж совершает проверку ремесленных инструментов каждые несколько часов (см. таблицу ниже) до тех пор, пока не наберёт желаемое количество успехов. Когда вы совершаете проверку, вы затрачиваете один материал, редкость которого зависит от редкости предмета, вне зависимости от результата. Для создания любого магического предмета вам требуется его формула.
+      </p>
+      <p class="text-lg mb-4">
+        Каждый провал проверки вычитается из общего количества успехов, критический провал или провал на 5 или более считается за 2 провала. Если вы преуспеваете в проверке на 5 или более, то это считается за 2 успеха.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Редкость</th>
+            <th>Время до проверки</th>
+            <th>Сл</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Обычный</td>
+            <td>4 часа</td>
+            <td>1к10 + 5</td>
+          </tr>
+          <tr>
+            <td>Необычный</td>
+            <td>8 часов</td>
+            <td>1к10 + 9</td>
+          </tr>
+          <tr>
+            <td>Редкий</td>
+            <td>16 часов</td>
+            <td>1к10 + 13</td>
+          </tr>
+          <tr>
+            <td>Очень редкий</td>
+            <td>32 часа</td>
+            <td>1к10 + 17</td>
+          </tr>
+          <tr>
+            <td>Легендарный</td>
+            <td>64 часа</td>
+            <td>1к10 + 21</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Количество успехов</th>
+            <th>Результат</th>
+            <th>Описание</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><0</td>
+            <td>Провал</td>
+            <td>Предмет уничтожен, и вы возвращаете половину затраченных материалов.</td>
+          </tr>
+          <tr>
+            <td>0-1</td>
+            <td>Набросок</td>
+            <td>Вы можете прервать создание предмета и вернуть все затраченные материалы.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Грубый результат</td>
+            <td>Вы можете завершить создание предмета, но он получит штраф -2 к КД, попаданию, урону, сложности спасброска и/или уменьшение количества зарядов вдвое.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Законченная работа</td>
+            <td>Вы создали то, что хотели.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Искусно сделанное</td>
+            <td>Предмет получает бонус +1 к КД, попаданию, урону, сложности спасброска и/или увеличение количества зарядов на четверть.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Мастерски сделанное*</td>
+            <td>В дополнение к эффектам "Искусно сделанного", предмет получает одно случайное малое артефактное свойство (10% шанс, что оно будет отрицательным).</td>
+          </tr>
+          <tr>
+            <td>6+</td>
+            <td>Шедевр*</td>
+            <td>В дополнение к эффектам "Искусно сделанного", предмет получает одно случайное основное артефактное свойство (10% шанс, что оно будет отрицательным).</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-lg mb-4">*Только для редких или более редких предметов.</p>
+      <h2>Изготовление расходуемых магических предметов</h2>
+      <p class="text-lg mb-4">
+        Для изготовления расходуемого предмета вам требуется лишь один материал, префикс которого не имеет значения, а также некоторое количество времени.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Редкость</th>
+            <th>Время</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Обычный</td>
+            <td>6 часов</td>
+          </tr>
+          <tr>
+            <td>Необычный</td>
+            <td>12 часов</td>
+          </tr>
+          <tr>
+            <td>Редкий</td>
+            <td>24 часа</td>
+          </tr>
+          <tr>
+            <td>Очень редкий</td>
+            <td>48 часов</td>
+          </tr>
+          <tr>
+            <td>Легендарный</td>
+            <td>96 часов</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Написание свитков заклинаний</h2>
+      <p class="text-lg mb-4">
+        Для написания свитка заклинания вам требуется владение инструментами каллиграфа и доступ к заклинанию, которое вы хотите записать. Также нужны магические чернила соответствующей редкости свитка.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>Уровень заклинания</th>
+            <th>Редкость</th>
+            <th>Время написания</th>
+            <th>Цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Заговор</td>
+            <td>Обычный</td>
+            <td>1 час</td>
+            <td>60 зм</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Обычный</td>
+            <td>2 часа</td>
+            <td>75 зм</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Необычный</td>
+            <td>4 часа</td>
+            <td>160 зм</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Необычный</td>
+            <td>6 часов</td>
+            <td>200 зм</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Редкий</td>
+            <td>8 часов</td>
+            <td>800 зм</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Редкий</td>
+            <td>10 часов</td>
+            <td>1000 зм</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Очень редкий</td>
+            <td>12 часов</td>
+            <td>8000 зм</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Очень редкий</td>
+            <td>14 часов</td>
+            <td>9000 зм</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Очень редкий</td>
+            <td>16 часов</td>
+            <td>10000 зм</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Легендарный</td>
+            <td>18 часов</td>
+            <td>25000 зм</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Разбор на материалы</h2>
+      <p class="text-lg mb-4">
+        Вы можете разобрать ненужный магический предмет на материалы, потратив 8 часов и получив 1 материал, из которого он был создан. Вы не можете разбирать свитки и расходуемые предметы.
+      </p>
+      <h2>Осложнения</h2>
+      <p class="text-lg mb-4">
+        На каждый бросок создания (или каждые 12 часов для свитков и расходуемых предметов) с вероятностью 10% может возникнуть осложнение.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к8</th>
+            <th>Осложнение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Другой ремесленник обвиняет вас в краже его технологий.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Могущественная личность желает приобрести результат вашей работы и не принимает отказ.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Другой ремесленник проявляет странную заинтересованность и настаивает на наблюдении.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Во время работы произошёл всплеск магии, который повредил предмет.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Кто-то постоянно мешает вам работать.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Ходят слухи, что вы работаете над чем-то опасным.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Предмет хотели украсть.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Ваши инструменты сломались.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Изготовление немагических предметов</h2>
+      <p class="text-lg mb-4">
+        Вы можете изготавливать любые обычные предметы, не нуждаясь в формулах. Вам всё ещё нужно владение связанными с материалом инструментами, а также самими материалами, только не магическими, а обычными. За 1 час вы можете изготовить предметы на сумму в 50 зм. Если предмет стоит больше 50 зм, то его цену нужно разделить на 50, чтобы получить итоговое количество часов, необходимое для создания. При этом вы тратите материалы лишь на половину от его стоимости, но время создания зависит от полной стоимости предмета.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Префиксы материалов для ремесла в D&D">
+  <meta name="keywords" content="ремесло, префиксы, материалы, D&D, Либре">
+  <title>Префиксы - Ремесло</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2 {
+      color: #8b4513;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="crafting-index.html">Ремесло</a>
+    <a href="materials.html">Материалы</a>
+    <a href="items.html">Изготовление предметов</a>
+    <a href="formulas.html">Формулы</a>
+  </nav>
+  <div class="container">
+    <div class="parchment">
+      <h1>Префиксы материалов</h1>
+      <p class="text-lg mb-4">
+        Каждый материал имеет свой префикс, который передаётся магическому предмету, созданному из него. Префикс определяется случайным образом (к20) и может отсутствовать. Эффекты зависят от типа снаряжения: Оружие, Одежда, Безделушка, Настройка. Бонусы увеличиваются с редкостью материала: +1 для обычного, +2 для необычного, +3 для редкого и т.д.
+      </p>
+      <table class="mb-4">
+        <thead>
+          <tr>
+            <th>к20</th>
+            <th>Префикс</th>
+            <th>Свойства - Настройка</th>
+            <th>Свойства - Одежда</th>
+            <th>Свойства - Оружие</th>
+            <th>Свойства - Безделушка</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Без префикса</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Животворящий</td>
+            <td>Бонус +1 к проверкам Мудрости (Медицина)</td>
+            <td>Максимум хитов увеличивается на 1</td>
+            <td>При попадании восстанавливаете 1 хит</td>
+            <td>Заклинания восстановления хитов увеличивают эффект на 1</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Вечный</td>
+            <td>Бонус +1 к проверкам Мудрости (Проницательность)</td>
+            <td>Урон снижается на 1 за каждого союзника в 5 футах</td>
+            <td>Доп. урон +1 за каждого союзника в 5 футах от цели</td>
+            <td>Сл спасброска заклинаний +1 за каждые 2 союзника в 5 футах</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Стихийный</td>
+            <td>Бонус +1 к проверкам Интеллекта (Природа)</td>
+            <td>Урон от огня, холода, звука, кислоты или электричества снижается на 1</td>
+            <td>Доп. урон +1 (огонь, холод, звук, кислота или электричество)</td>
+            <td>Доп. урон +1 для заклинаний (огонь, холод, звук, кислота, электричество)</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Эфирный</td>
+            <td>Бонус +1 к проверкам Интеллекта (Магия)</td>
+            <td>Урон от заклинаний снижается на 1</td>
+            <td>Доп. урон +1 силовым полем заклинателям</td>
+            <td>Максимум Очков заклинаний +1</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Мрачный</td>
+            <td>Бонус +1 к проверкам Ловкости (Скрытность)</td>
+            <td>Дробящий, колющий, рубящий урон снижается на 1 в тусклом свете/тьме</td>
+            <td>Доп. урон +1 в тусклом свете/тьме</td>
+            <td>Гасит немагический свет в радиусе 5 футов</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Святой</td>
+            <td>Бонус +1 к проверкам Интеллекта (Религия)</td>
+            <td>Урон снижается на 1 от существ со злым/хаотичным мировоззрением</td>
+            <td>Доп. урон +1 излучением существам со злым/хаотичным мировоззрением</td>
+            <td>Восстановление хитов даёт 1 временный хит</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Нечестивый</td>
+            <td>Бонус +1 к проверкам Харизмы (Запугивание)</td>
+            <td>Урон снижается на 1 от существ с добрым/законным мировоззрением</td>
+            <td>Доп. урон +1 некротической энергией существам с добрым/законным мировоззрением</td>
+            <td>Нанесение урона даёт 1 временный хит</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Гниющий</td>
+            <td>Бонус +1 к проверкам Мудрости (Выживание)</td>
+            <td>Урон от яда снижается на 2</td>
+            <td>Доп. урон +1 ядом цели и существам в 5 футах</td>
+            <td>Штраф -1 к спасброскам себе и существам в 5 футах</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Кровавый</td>
+            <td>Бонус +1 к проверкам Силы (Атлетика)</td>
+            <td>Восстанавливаете 1 хит в начале хода, если хиты ≤ половины максимума</td>
+            <td>Доп. урон +1, если хиты цели ≤ половины максимума</td>
+            <td>Убийство существа восстанавливает 1 хит</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Гибкий</td>
+            <td>Бонус +1 к проверкам Ловкости (Акробатика)</td>
+            <td>Урон от дальнобойных атак снижается на 1</td>
+            <td>Цель получает штраф -1 к следующей атаке</td>
+            <td>Скорость передвижения +5 футов</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Сияющий</td>
+            <td>Бонус +1 к проверкам Харизмы (Выступление)</td>
+            <td>Дробящий, колющий, рубящий урон снижается на 1 в ярком свете</td>
+            <td>Доп. урон +1 в ярком свете</td>
+            <td>Излучает яркий свет в радиусе 5 футов и тусклый в радиусе 5 футов</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>Драгоценный</td>
+            <td>Бонус +1 к проверкам Харизмы (Убеждение)</td>
+            <td>Стоимость предмета увеличивается на 1/4</td>
+            <td>Стоимость предмета увеличивается на 1/4</td>
+            <td>Стоимость предмета увеличивается на 1/4</td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>Мифический</td>
+            <td>Бонус +1 к проверкам Интеллекта (История)</td>
+            <td>После попадания +1 КД до конца следующего хода</td>
+            <td>После промаха +1 к попаданию до конца следующего хода</td>
+            <td>Бонус +1 к спасброскам против Очарования и Иллюзий</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>Фантомный</td>
+            <td>Бонус +1 к проверкам Мудрости (Восприятие)</td>
+            <td>Бонус +1 КД против нематериальных/невидимых существ</td>
+            <td>Доп. урон +2 нематериальным/невидимым существам</td>
+            <td>Видите невидимых существ в радиусе 5 футов</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>Следящий</td>
+            <td>Бонус +1 к проверкам Интеллекта (Расследование)</td>
+            <td>Урон снижается на 1 от выбранного вида существ</td>
+            <td>Доп. урон +1 выбранному виду существ</td>
+            <td>Действия Поиск и Изучение монстра бонусным действием</td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>Мимикрирующий</td>
+            <td>Бонус +1 к проверкам Харизмы (Обман)</td>
+            <td>Случайное свойство одежды</td>
+            <td>Случайное свойство оружия</td>
+            <td>Случайное свойство безделушки</td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td>Осквернённый</td>
+            <td>Штраф -1 к следующему броску к20 после провала</td>
+            <td>Существо в 60 футах, нанёсшее урон, получает 1 урон некротической энергией</td>
+            <td>Цель получает штраф -1 к следующему спасброску</td>
+            <td>Убийство заклинанием 1+ круга восстанавливает 1 Очко заклинаний</td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>Жаждущий</td>
+            <td>Восстановление хитов уменьшается на 1</td>
+            <td>Существо в 10 футах восстанавливает хиты: +1 к следующему спасброску</td>
+            <td>Существо в 10 футах восстанавливает хиты: +1 к следующей атаке</td>
+            <td>Существо в 10 футах восстанавливает хиты: +1 временный хит</td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>Искажённый</td>
+            <td>Бонус +1 к проверкам Инициативы</td>
+            <td>Бонус +1 к спасброскам против заклинаний без урона</td>
+            <td>Критическое попадание на 19-20</td>
+            <td>Заклинания 1+ круга могут изменяться случайным образом</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

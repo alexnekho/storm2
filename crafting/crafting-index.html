@@ -1,0 +1,156 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Правила ремесла в D&D: создание магических и немагических предметов, префиксы материалов">
+  <meta name="keywords" content="ремесло, D&D, магические предметы, материалы, префиксы, Либре">
+  <title>Ремесло - Руководство к Либре</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2 {
+      color: #8b4513;
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 2rem;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="materials.html">Материалы</a>
+    <a href="items.html">Изготовление предметов</a>
+    <a href="formulas.html">Формулы</a>
+    <a href="prefixes.html">Префиксы</a>
+  </nav>
+  <div class="container">
+    <div class="parchment">
+      <h1>Ремесло</h1>
+      <p class="text-lg mb-4">
+        Это домашнее правило полностью изменяет механику создания предметов в D&D, делая её более быстрой и увлекательной. Оно привносит более подробное описание процесса создания с возможностями улучшения магических предметов при помощи префиксов и усердного труда.
+      </p>
+      <h2>Используемые инструменты</h2>
+      <table class="table-auto w-full mb-4 border-collapse">
+        <thead>
+          <tr class="bg-[#d2c4a0]">
+            <th class="border px-4 py-2">Инструменты</th>
+            <th class="border px-4 py-2">Виды материалов</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border px-4 py-2">Кузнеца, ремонтника</td>
+            <td class="border px-4 py-2">Металлы</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Кожевника</td>
+            <td class="border px-4 py-2">Кожа</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Ткача</td>
+            <td class="border px-4 py-2">Ткань</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Ювелира</td>
+            <td class="border px-4 py-2">Камни, металлы</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Плотника, резчика по дереву</td>
+            <td class="border px-4 py-2">Дерево</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">Каллиграфа</td>
+            <td class="border px-4 py-2">Чернила</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Подразделы</h2>
+      <ul class="list-disc list-inside text-lg">
+        <li><a href="materials.html">Сбор, поиск и покупка материалов</a></li>
+        <li><a href="items.html">Изготовление магических и немагических предметов</a></li>
+        <li><a href="formulas.html">Написание магических формул</a></li>
+        <li><a href="prefixes.html">Префиксы материалов</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
