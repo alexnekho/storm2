@@ -1,0 +1,501 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сеттинговые предметы для D&D">
+  <meta name="keywords" content="сеттинг, предметы, D&D, Либре">
+  <title>Предметы</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    .accordion-item {
+      border-bottom: 1px solid #d2c4a0;
+      margin-bottom: 0.5rem;
+    }
+    .accordion-header {
+      cursor: pointer;
+      padding: 1rem;
+      background-color: #fff5e1;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-header:hover {
+      background-color: #f5e5c1;
+    }
+    .accordion-content {
+      display: none;
+      padding: 1rem;
+      background-color: #f4ecd8;
+      border-radius: 5px;
+    }
+    .accordion-content.open {
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #d2c4a0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #d2c4a0;
+    }
+    .highlight {
+      background-color: #fff5e1;
+      border-left: 4px solid #b22222;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="setting-index.html">Сеттинг</a>
+  </nav>
+  <div class="subnav">
+    <a href="setting-items.html">Предметы</a>
+    <a href="setting-spells.html">Заклинания</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Предметы</h1>
+
+      <h2>Снаряжение</h2>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Зачарованная трубка</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <div class="highlight">
+            <p class="text-lg">
+              <strong>Стоимость:</strong> 150 зм<br>
+              Магическая трубка, позволяющая курить специальные травяные зелья, дающие различные преимущества. Чтобы скурить одну порцию зелья, требуется потратить 1 минуту.
+            </p>
+          </div>
+          <h4>Травяные зелья</h4>
+          <table class="mb-4">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Стоимость</th>
+                <th>Эффект</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Просветляющее зелье</td>
+                <td>25 зм</td>
+                <td>Скурив это зелье, вы получаете 1 Рассудок, если его значение ниже 12.</td>
+              </tr>
+              <tr>
+                <td>Очищающее зелье</td>
+                <td>75 зм</td>
+                <td>Скурив это зелье, вы оканчиваете на себе действие 1 психоза, кратковременного или долгосрочного безумия.</td>
+              </tr>
+              <tr>
+                <td>Дурманящее зелье</td>
+                <td>50 зм</td>
+                <td>Скурив это зелье, вы можете игнорировать любые штрафы от травм (кроме потери конечностей), в течение 10 минут.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Успокаивающий отвар</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 25 зм<br>
+            Действием вы можете выпить отвар из фляги, чтобы получить преимущество на все спасброски Рассудка, на 1 час.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Настойка кровавика</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 75 зм<br>
+            Действием вы можете выпить настойку из флакона, чтобы восстановить себе 1 кость хитов. Вы также восстанавливаете количество хитов, равное её броску.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Целебная припарка</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 100 зм<br>
+            Действием вы можете наложить целебную припарку. Вы восстанавливаете количество хитов, равное вашему модификатору Телосложения в начале каждого своего хода, в течение 5 раундов.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Истощающий сбор</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 100 зм<br>
+            Действием вы можете поджечь и метнуть пучок специальных трав на расстояние вплоть до 30 футов. Сбор горит 1 минуту, источая при этом облако слабого дыма радиусом 10 футов. Любое существо, начинающее свой ход в этом дыме, должно преуспеть в спасброске Телосложения Сл. 15, иначе станет отравленным на 1 минуту. Пока существо отравлено таким образом, оно теряет 2 очка заклинаний в конце каждого своего хода. Существо может повторять спасбросок Телосложения в конце каждого своего хода, окончивая на себе эффект при успехе.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Масло против нежити/исчадий/монстров/аберраций/фей</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 75 зм<br>
+            Действием вы можете смазать маслом одно рукопашное оружие или 5 боеприпасов. При нанесении урона смазанным оружием или боеприпасом, существо получает дополнительную кость урона, если его тип совпадает с типом масла. Оружие и боеприпасы сохраняют данный эффект в течение 10 минут.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Огненное/холодное/кислотное/электрическое масло</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Стоимость:</strong> 75 зм<br>
+            Действием вы можете смазать маслом одно рукопашное оружие или 5 боеприпасов. При нанесении урона смазанным оружием или боеприпасом, цель получает дополнительно 1к6 урона, тип которого зависит от масла. Оружие и боеприпасы сохраняют данный эффект в течение 10 минут.
+          </p>
+        </div>
+      </div>
+
+      <h2>Магические предметы</h2>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Зелье эссенции теней</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Редкость:</strong> варьируется<br>
+            Вы восстанавливаете очки заклинаний, когда выпиваете это зелье. Количество восстанавливаемых очков заклинаний зависит от редкости зелья, как показано в таблице ниже. Вне зависимости от силы зелья, оно представляет собой переливающийся туман, светящийся при встряхивании.
+          </p>
+          <table class="mb-4">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Редкость</th>
+                <th>Восстанавливаемые очки заклинаний</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Эссенция теней</td>
+                <td>Обычное</td>
+                <td>1к4 + 1</td>
+              </tr>
+              <tr>
+                <td>Большая эссенция теней</td>
+                <td>Необычное</td>
+                <td>1к6 + 2</td>
+              </tr>
+              <tr>
+                <td>Отличная эссенция теней</td>
+                <td>Редкое</td>
+                <td>1к8 + 3</td>
+              </tr>
+              <tr>
+                <td>Превосходная эссенция теней</td>
+                <td>Очень редкое</td>
+                <td>1к10 + 4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Точильный камень +1/+2/+3</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> варьируется (необычный, редкий, очень редкий)<br>
+            При помощи этого волшебного точильного камня вы можете заточить одно рубящее или колющее оружие или до 5 рубящих или колющих боеприпасов. Затачивание занимает 1 минуту. В течение часа заточенные предметы считаются магическими и предоставляют бонус к броскам атаки и урона, зависящий от редкости камня. После использования точильный камень теряет свою магию.
+          </p>
+          <table class="mb-4">
+            <thead>
+              <tr>
+                <th>Редкость</th>
+                <th>Бонус к броскам атаки и урона</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Необычный</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Редкий</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Очень редкий</td>
+                <td>+3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Серебряная булла</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> необычный<br>
+            На этой серебряной булле с одной стороны изображён драконий лик, а с другой — дважды перечёркнутая стрела. Действием вы демонстрируете эту буллу, заставляя выбранное существо в радиусе 30 футов совершить спасбросок Телосложения Сл. 15. Если существо — заклинатель, то оно становится опутанным и теряет возможность накладывать заклинания в течение 1 минуты. Существо может действием совершить проверку заклинательной характеристики Сл. 15, оканчивая на себе эффект при успехе. В качестве альтернативы вы можете наложить заклинание <em>Рассеивание магии</em> [Dispel Magic] при помощи буллы, используя Мудрость в качестве заклинательной характеристики. После использования булла исчезает во вспышке света.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Сборщик магии</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> редкий (требуется настройка заклинателем)<br>
+            По окончании продолжительного отдыха вы можете потратить любое количество костей хитов, чтобы заключить их в сборщик магии. Бонусным действием вы можете потратить одну кость, заключённую в сборщик магии, и восстановить количество очков заклинаний, равное её броску. Одновременно сборщик магии может хранить количество костей, равное вашему модификатору заклинательной характеристики (минимум 1).
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Стихийный сборщик</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> необычный (требуется настройка заклинателем)<br>
+            Вы можете наложить заклинание <em>Поглощение стихий</em> [Absorb Elements] с помощью сборщика. Когда вы накладываете заклинание таким образом, вы также восстанавливаете 1к6 очков заклинаний. Сборщик может наложить это заклинание дважды и восстанавливает все использования на рассвете. Вы можете присоединить этот предмет к Сборщику магии, после чего он перестаёт учитываться в общем количестве магических предметов, на которые вы можете настроиться. После чего, вместо восстановления очков заклинаний, он заключает кость 1к6 в Сборщик магии.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Перегонный куб</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> необычный (требуется настройка заклинателем)<br>
+            Когда вы восстанавливаете очки заклинаний, вы также восстанавливаете такое же количество хитов. Не влияет на очки заклинаний, восстанавливаемые на продолжительном отдыхе. Вы можете присоединить этот предмет к Сборщику магии, после чего он перестаёт учитываться в общем количестве магических предметов, на которые вы можете настроиться.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Магическая батарея</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> редкий (требуется настройка заклинателем)<br>
+            Пока вы настроены на этот предмет, ваш максимум очков заклинаний увеличивается на значение вашего уровня. По окончании продолжительного отдыха вы восстанавливаете дополнительное количество очков заклинаний, равное вашему уровню. Вы можете присоединить этот предмет к Сборщику магии, после чего он перестаёт учитываться в общем количестве магических предметов, на которые вы можете настроиться. После чего, вместо увеличения максимума очков заклинаний, он увеличивает вместимость Сборщика магии на количество костей, равное вашему бонусу мастерства. Также, вместо восстановления дополнительных очков заклинаний по окончании продолжительного отдыха, он заключает кость мастерства (DMG стр. 263) в Сборщик магии.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Жизнесборщик</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> редкий (требуется настройка заклинателем)<br>
+            Когда в радиусе 30 футов от вас хиты существа опускаются до 0, вы можете реакцией восстановить количество очков заклинаний, равное броску одной кости хитов существа. Действием вы можете заставить существо в радиусе 30 футов совершить спасбросок Телосложения против Сл ваших заклинаний, при провале существо теряет одну кость хитов, а вы восстанавливаете количество очков заклинаний, равное её броску. Жизнесборщик может применить каждое из действий один раз и восстанавливает все использования на рассвете. Вы можете присоединить этот предмет к Сборщику магии, после чего он перестаёт учитываться в общем количестве магических предметов, на которые вы можете настроиться. После чего, вместо восстановления очков заклинаний, он заключает кость хитов существа в Сборщик магии.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Ускоритель частиц</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Чудесный предмет, редкость:</strong> очень редкий (требуется настройка заклинателем)<br>
+            Пока вы настроены на этот предмет, когда вы накладываете заклинание, вы можете восстановить количество очков заклинаний, равное кругу заклинания. Ускоритель может использовать эту особенность трижды и восстанавливает все использования на рассвете. Вы можете присоединить этот предмет к Сборщику магии, после чего он перестаёт учитываться в общем количестве магических предметов, на которые вы можете настроиться. После чего, вы можете добавлять половину вашего бонуса мастерства (округляя в большую сторону) к броскам костей из Сборщика магии, для восстановления очков заклинаний.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Межвременные часы</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <div class="highlight">
+            <p class="text-lg">
+              <strong>Чудесный предмет, редкость:</strong> легендарный<br>
+              Песочные часы с золотым песком, обрамлённые в прямоугольник из лунного серебра. Действием вы можете получить все преимущества продолжительного отдыха, вы также восстанавливаете все очки заклинаний, хиты, кости хитов и избавляетесь от всех степеней истощения. В качестве альтернативы вы можете наложить заклинание <em>Остановка времени</em> [Time Stop] с помощью часов. После использования часы ломаются и исчезают.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <a href="setting-index.html">← Назад: Сеттинг</a>
+        <a href="setting-spells.html">Далее: Заклинания →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        const isOpen = content.classList.contains('open');
+        document.querySelectorAll('.accordion-content').forEach(item => {
+          item.classList.remove('open');
+          item.previousElementSibling.querySelector('span').textContent = '▼';
+        });
+        if (!isOpen) {
+          content.classList.add('open');
+          header.querySelector('span').textContent = '▲';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

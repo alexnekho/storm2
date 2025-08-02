@@ -1,0 +1,349 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сеттинговые заклинания для D&D">
+  <meta name="keywords" content="сеттинг, заклинания, D&D, Либре">
+  <title>Заклинания</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body {
+      background-color: #f4ecd8;
+      font-family: 'MedievalSharp', cursive;
+      color: #8b4513;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #8b4513;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.2rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .subnav {
+      background-color: #d2c4a0;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .subnav a {
+      color: #8b4513;
+      margin: 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .subnav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .parchment {
+      background-color: #f4ecd8;
+      border: 2px solid #d2c4a0;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1, h2, h3 {
+      color: #8b4513;
+    }
+    .accordion-item {
+      border-bottom: 1px solid #d2c4a0;
+      margin-bottom: 0.5rem;
+    }
+    .accordion-header {
+      cursor: pointer;
+      padding: 1rem;
+      background-color: #fff5e1;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-header:hover {
+      background-color: #f5e5c1;
+    }
+    .accordion-content {
+      display: none;
+      padding: 1rem;
+      background-color: #f4ecd8;
+      border-radius: 5px;
+    }
+    .accordion-content.open {
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    a {
+      color: #b22222;
+      text-decoration: underline;
+    }
+    .highlight {
+      background-color: #fff5e1;
+      border-left: 4px solid #b22222;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html">Главная</a>
+    <a href="setting-index.html">Сеттинг</a>
+  </nav>
+  <div class="subnav">
+    <a href="setting-items.html">Предметы</a>
+    <a href="setting-spells.html">Заклинания</a>
+  </div>
+  <div class="container">
+    <div class="parchment">
+      <h1>Заклинания</h1>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Рукопожатие мертвеца</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>1 уровень, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> Касание<br>
+            <strong>Компоненты:</strong> С<br>
+            <strong>Длительность:</strong> Концентрация, вплоть до 1 минуты<br>
+            <strong>Классы:</strong> Волшебник, Колдун, Чародей, Жрец<br>
+            Вы хватаете существо за руку мертвецкой хваткой. Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. При попадании цель становится схваченной вами. Пока существо схвачено таким образом, оно совершает с помехой броски атаки и получает 1к8 урона некротической энергией в начале каждого своего хода. Схваченное вами существо может действием совершать проверки Силы против Сл ваших заклинаний. В случае успеха оно освобождается.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 2-го уровня или выше, то урон некротической энергией увеличивается на 1к8 за каждый уровень ячейки выше 1-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Героический пинок</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>1 уровень, преобразование</strong><br>
+            <strong>Время накладывания:</strong> 1 бонусное действие<br>
+            <strong>Дистанция:</strong> Касание<br>
+            <strong>Компоненты:</strong> С<br>
+            <strong>Длительность:</strong> Мгновенная<br>
+            <strong>Классы:</strong> Волшебник, Чародей, Жрец, Паладин, Следопыт, Изобретатель<br>
+            Вы наделяете свои ноги небывалой силой, после чего пинаете существо. Совершите рукопашную атаку заклинанием по существу в пределах досягаемости. При попадании цель отталкивается от вас на 10 футов и падает ничком. Если существо после этого ударится о твёрдую поверхность или предмет, оно получает 1к6 дробящего урона за каждые 10 футов перемещения.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 2-го уровня или выше, то дальность отталкивания увеличивается на 10 футов за каждый уровень ячейки выше 1-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Круг костей</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>3 уровень, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> На себя (10-футовый радиус)<br>
+            <strong>Компоненты:</strong> В, С, М (палец скелета)<br>
+            <strong>Длительность:</strong> 1 час<br>
+            <strong>Классы:</strong> Волшебник, Жрец, Чародей, Колдун<br>
+            Вы собираете кости с ближайших трупов, формируя вокруг себя щит. Вы получаете 5 временных хитов за каждый труп в радиусе 10 футов. Бонусным действием вы можете потратить 5 временных хитов, чтобы совершить дальнобойную атаку заклинанием по существу или объекту в пределах 60 футов. При попадании цель получает 3к8 колющего урона. Пока у вас есть эти временные хиты, каждый раз, когда вы получаете урон, из щита вылетают осколки, и все существа в радиусе 10 футов по вашему выбору должны совершить спасбросок Ловкости, получая 2к6 колющего урона при провале.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 4-го уровня или выше, то радиус действия увеличивается на 10 футов за каждый уровень ячейки выше 3-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Костяное копьё</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>2 уровень, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> 30 футов (60-футовая линия)<br>
+            <strong>Компоненты:</strong> В, С<br>
+            <strong>Длительность:</strong> Мгновенная<br>
+            <strong>Классы:</strong> Волшебник, Жрец, Чародей, Колдун<br>
+            Из трупа в радиусе 30 футов вылетает костяное копьё в выбранном вами направлении, формируя линию длиной 30 футов и шириной 5 футов. Все существа в линии должны совершить спасбросок Ловкости. Существо получает 4к6 колющего урона при провале или половину при успехе.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 3-го уровня или выше, то колющий урон увеличивается на 1к6 за каждый уровень ячейки выше 2-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Костотряс</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>4 уровень, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> 60 футов<br>
+            <strong>Компоненты:</strong> В, С, М (небольшой платиновый молоточек стоимостью 100 зм)<br>
+            <strong>Длительность:</strong> 1 раунд<br>
+            <strong>Классы:</strong> Волшебник, Колдун, Чародей, Жрец<br>
+            Вы заставляете скелет существа дрожать. Существо должно совершить спасбросок Телосложения. Оно получает 4к10 дробящего урона при провале и становится ошеломлённым до начала вашего следующего хода. В случае успеха существо получает половину урона и не ошеломляется.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 5-го уровня или выше, то дробящий урон увеличивается на 1к10 за каждый уровень ячейки выше 4-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Огрубевшая плоть</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Заговор, преобразование</strong><br>
+            <strong>Время накладывания:</strong> 1 бонусное действие или 1 реакция, когда вы получаете дробящий, колющий или рубящий урон<br>
+            <strong>Дистанция:</strong> На себя<br>
+            <strong>Компоненты:</strong> С<br>
+            <strong>Длительность:</strong> 1 раунд<br>
+            <strong>Классы:</strong> Волшебник, Колдун, Чародей, Жрец, Друид, Изобретатель<br>
+            Ваша кожа грубеет, из-за чего вы получаете сопротивление дробящему, колющему и рубящему урону до начала своего следующего хода.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Воля повелителя</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <div class="highlight">
+            <p class="text-lg">
+              <strong>8 уровень, некромантия</strong><br>
+              <strong>Время накладывания:</strong> 1 действие<br>
+              <strong>Дистанция:</strong> На себя (120-футовый радиус)<br>
+              <strong>Компоненты:</strong> В, С, М (драгоценная корона стоимостью 750 зм)<br>
+              <strong>Длительность:</strong> Концентрация, вплоть до 10 минут<br>
+              <strong>Классы:</strong> Волшебник, Жрец<br>
+              Хиты союзной нежити в радиусе 120 футов не могут опуститься ниже 1. Когда вы подвергаетесь действию заклинания или магического эффекта, вы также можете распространить его на любую нежить в пределах дистанции. Несогласное существо может попытаться преуспеть в спасброске Харизмы, игнорируя эффект при успехе. Действие эффектов на существах оканчивается вместе с заклинанием.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Кровопотеря</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>Заговор, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> 60 футов<br>
+            <strong>Компоненты:</strong> В, С, М (кинжал)<br>
+            <strong>Длительность:</strong> 1 раунд<br>
+            <strong>Классы:</strong> Волшебник, Жрец, Колдун<br>
+            Вы наносите себе 1 колющего урона, после чего выбранное существо должно совершить спасбросок Телосложения. При провале, когда существо восстанавливает хиты до начала вашего следующего хода, оно вместо этого получает урон некротической энергией, равный полученному исцелению.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <h3>Кровавая вуаль</h3>
+          <span>▼</span>
+        </div>
+        <div class="accordion-content">
+          <p class="text-lg">
+            <strong>1 уровень, некромантия</strong><br>
+            <strong>Время накладывания:</strong> 1 действие<br>
+            <strong>Дистанция:</strong> На себя<br>
+            <strong>Компоненты:</strong> В, С, М (капля крови)<br>
+            <strong>Длительность:</strong> 1 час<br>
+            <strong>Классы:</strong> Волшебник, Жрец, Чародей, Паладин, Колдун<br>
+            Вы окутываете себя защитным барьером из собственной крови. Каждый раз, когда вы получаете урон, вы можете потратить 1 кость хитов и уменьшить полученный урон на выпавшее значение + модификатор заклинательной характеристики за каждую потраченную кость.<br>
+            <strong>На больших уровнях:</strong> Если вы накладываете это заклинание, используя ячейку 2-го уровня или выше, то количество костей хитов, которые вы можете тратить, увеличивается на 1 за каждый уровень ячейки выше 1-й.
+          </p>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <a href="setting-items.html">← Назад: Предметы</a>
+        <a href="setting-items.html">Далее: Предметы →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        const isOpen = content.classList.contains('open');
+        document.querySelectorAll('.accordion-content').forEach(item => {
+          item.classList.remove('open');
+          item.previousElementSibling.querySelector('span').textContent = '▼';
+        });
+        if (!isOpen) {
+          content.classList.add('open');
+          header.querySelector('span').textContent = '▲';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
